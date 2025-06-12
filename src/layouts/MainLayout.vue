@@ -44,8 +44,8 @@
 
 <style>
 .prilagodeniHeader {
-  background-color: #004d40; /* Teal 10 ili slično */
-  color: 250, 250, 225; /* boja teksta */
+  background-color: #004d40; /*teal-10*/
+  color: 250, 250, 225; /* boja teksta yellow-1*/
 }
 </style>
 

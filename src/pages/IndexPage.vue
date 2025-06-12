@@ -1,44 +1,45 @@
 <template>
   <div :style="backgroundStyle" class="fullscreen bg-image">
-    <div class="overlay"></div>
-    <div class="title-container">
-      <q-card class="q-pa-lg bg-transparent text-yellow-1">
-        <h1 class="naslov">Pselekcija</h1>
-        <p class="podnaslov">
-          Kad srce želi najbolje za psa, <br />
-          srce treba partnera u odabiru.
-        </p>
-
-        <q-card-section>
-          <p class="podnaslov">Tražiš idealnog psa?</p>
-          <q-btn
-            icon="pets"
-            label="Pomoć za odabir idealnih šapica"
-            color="teal-6"
-            unelevated
-            text-color="yellow-1"
-            size="lg"
-            class="q-mb-md"
-            @click="$router.push('/psizbornik')"
-          />
-        </q-card-section>
-
-        <q-card-section>
+    <div class="overlay">
+      <div class="title-container">
+        <q-card class="q-pa-lg bg-transparent text-yellow-1">
+          <h1 class="naslov">Pselekcija</h1>
           <p class="podnaslov">
-            Već imaš psa? <br />
-            Ovdje možeš pronaći korisne informacije.
+            Kad srce želi najbolje za psa, <br />
+            srce treba partnera u odabiru.
           </p>
-          <q-btn
-            icon="info_outline"
-            label="Psinformacije"
-            color="teal-6"
-            unelevated
-            text-color="yellow-1"
-            size="lg"
-            @click="$router.push('/psinformacije')"
-          />
-        </q-card-section>
-      </q-card>
+
+          <q-card-section>
+            <p class="podnaslov">Tražiš idealnog psa?</p>
+            <q-btn
+              icon="pets"
+              label="Pomoć za odabir idealnih šapica"
+              color="teal-6"
+              unelevated
+              text-color="yellow-1"
+              size="lg"
+              class="q-mb-md"
+              @click="$router.push('/psizbornik')"
+            />
+          </q-card-section>
+
+          <q-card-section>
+            <p class="podnaslov">
+              Već imaš psa? <br />
+              Ovdje možeš pronaći korisne informacije.
+            </p>
+            <q-btn
+              icon="info_outline"
+              label="Psinformacije"
+              color="teal-6"
+              unelevated
+              text-color="yellow-1"
+              size="lg"
+              @click="$router.push('/psinformacije')"
+            />
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
   </div>
 </template>
@@ -49,13 +50,15 @@
   background-size: cover;
   background-position: center;
   height: 100vh;
+  z-index: 0;
 }
 
 .overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(255, 255, 255, 0.2); /* bijela s 40% prozirnosti */
+  background-color: rgba(255, 255, 255, 0.2);
   z-index: 1;
+  pointer-events: none;
 }
 
 /* Sve u .absolute-center ostaje iznad overlay-a */
@@ -70,6 +73,7 @@
   left: 4%;
   z-index: 2;
   color: rgb(250, 250, 225);
+  pointer-events: auto;
 }
 
 .naslov {
@@ -89,7 +93,6 @@
 </style>
 
 <script setup>
-//import { ref, computed } from 'vue'
 import { computed } from 'vue'
 
 // Lista slika

@@ -1,8 +1,8 @@
 # Pselekcija
 
-# Digitalizacija procesa odabira psa: od unesenih podataka do idealnog ljubimca
+Digitalizacija procesa odabira psa: od unesenih podataka do idealnog ljubimca
 
-# Pselekcija (pselekcija)
+Pselekcija (pselekcija)
 
 Pselekcija - Digitalizacija procesa odabira psa: od unesenih podataka do idealnog ljubimca
 
@@ -12,6 +12,7 @@ Pselekcija - Digitalizacija procesa odabira psa: od unesenih podataka do idealno
 yarn
 # or
 npm install
+
 ```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
@@ -45,5 +46,3 @@ quasar build
 ### Customize the configuration
 
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
-
-> > > > > > > 1424627 (Initialize the project 🚀)
