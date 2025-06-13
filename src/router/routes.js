@@ -6,6 +6,8 @@ const routes = [
       { path: '', component: () => import('pages/IndexPage.vue') },
       { path: 'psizbornik', component: () => import('pages/PsizbornikPage.vue') },
       { path: 'psinformacije', component: () => import('pages/PsinformacijePage.vue') },
+      { path: 'psodabrani', component: () => import('pages/PsodabraniPage.vue') },
+      { path: 'test', component: () => import('pages/TestPage.vue') },
     ],
   },
 

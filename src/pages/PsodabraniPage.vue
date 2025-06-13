@@ -1,0 +1,193 @@
+<template>
+  <div :style="backgroundStyle" class="fullscreen bg-image"></div>
+  <div class="overlay"></div>
+  <div class="title-container">
+    <q-card class="q-pa-lg bg-transparent text-yellow-1">
+      <h1 class="naslov">Pselekcija</h1>
+      <p class="podnaslov">
+        Kad srce želi najbolje za psa, <br />
+        srce treba partnera u odabiru.
+      </p>
+      <q-card-section>
+        <p class="tekstSectiona">Popis pasmina koje zadovoljavaju unesene kriterije:</p>
+      </q-card-section>
+
+      <q-card class="q-pa-md odabrani-card">
+        <q-card-section class="text-left">
+          <p class="tekstPopisa">Pasmine koje ispunjavaju Vaše kriterije:</p>
+          <p class="tekstPopisa">
+            1.<br />
+            2.<br />
+            3.<br />
+            4.<br />
+            5.<br />
+            6.
+          </p>
+          <q-btn
+            label="Pogledajte više - privremeno ovdje - ide svakom izboru svoj"
+            color="teal-6"
+            text-color="yellow-1"
+            unelevated
+            class="q-mt-md"
+            style="
+              width: 250px;
+              background-color: rgba(0, 128, 128, 0.5);
+              border-radius: 20px;
+              border: 2px solid rgba(255, 255, 255, 0.4);
+              box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+              color: #fffde7;
+              text-transform: none;
+            "
+          />
+          <!--svaka pasmina će dobiti svoj q-btn za pregled više informacija-->
+        </q-card-section>
+      </q-card>
+      <q-card-section>
+        <p class="tekstSectiona">Želite li promijeniti parametre pretrage?</p>
+        <q-btn
+          icon="pets"
+          label="Pokušat ću ponovo."
+          color="teal-6"
+          unelevated
+          text-color="yellow-1"
+          size="lg"
+          class="q-mb-md"
+          @click="$router.push('/psizbornik')"
+          style="text-transform: none"
+        />
+      </q-card-section>
+    </q-card>
+  </div>
+
+  <!-- HOME BUTTON -->
+
+  <q-btn
+    label="Povratak na glavnu stranicu"
+    size="15px"
+    round
+    color="teal"
+    icon="map"
+    class="home-btn"
+    @click="$router.push('/')"
+  />
+</template>
+
+<style>
+.bg-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  z-index: -1;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  z-index: 0; /* treba ostati UVIJEK ispod sadržaja */
+  pointer-events: none;
+}
+
+/* Sve u .absolute-center ostaje iznad overlay-a */
+.absolute-center {
+  position: relative;
+  z-index: 2;
+}
+
+.title-container {
+  position: relative;
+  top: 3%;
+  left: 4%;
+  z-index: 1;
+  color: rgb(250, 250, 225);
+  pointer-events: auto;
+}
+
+.naslov {
+  font-size: 8rem;
+  font-weight: bolder;
+  font-family: 'Georgia', sans-serif;
+  margin: 0;
+}
+
+.podnaslov {
+  font-size: 2rem;
+  font-weight: normal;
+  margin: 1rem 0 2rem 0;
+  font-family: 'Georgia', sans-serif;
+  color: rgb(250, 250, 225);
+}
+
+.odabrani-card {
+  position: relative;
+  width: 800px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  color: #fffde7;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: normal;
+  z-index: 10;
+}
+
+.tekstSectiona {
+  font-size: 1.1rem;
+  font-weight: normal;
+  margin: 1rem 0 1rem 0;
+  font-family: 'Georgia', sans-serif;
+  color: #fffde7;
+}
+
+.tekstPopisa {
+  font-size: 1.1rem;
+  font-weight: normal;
+  margin: 1rem 0 1rem 0;
+  font-family: 'Georgia', sans-serif;
+  color: #17564c;
+}
+</style>
+
+<script setup>
+import { computed } from 'vue'
+
+// Lista slika
+const slikePozadine = [
+  'image1.jpg',
+  'image2.jpg',
+  'image3.jpeg',
+  'image4.jpeg',
+  'image5.jpeg',
+  'image6.jpg',
+  'image7.jpg',
+  'image8.jpg',
+  'image9.jpg',
+  'image10.jpg',
+  'image11.jpeg',
+  'image12.jpg',
+]
+
+// Dohvaćam index iz localStorage za kružno pokretanje jedne po jedne slike za background ili stavi na 0
+let currentIndex = localStorage.getItem('backgroundIndex')
+currentIndex = currentIndex ? parseInt(currentIndex) : 0
+
+// Povećavam index za sljedeći put kako bi mi se slike prikazivale kružno
+const nextIndex = (currentIndex + 1) % slikePozadine.length
+localStorage.setItem('backgroundIndex', nextIndex)
+
+// Definiram pozadinu
+const backgroundStyle = computed(() => {
+  const slika = slikePozadine[currentIndex] || 'image1.jpg'
+  return {
+    backgroundImage: `url(/backgrounds/${slika})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  }
+})
+</script>
