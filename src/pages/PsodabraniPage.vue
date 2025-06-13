@@ -15,14 +15,18 @@
       <q-card class="q-pa-md odabrani-card">
         <q-card-section class="text-left">
           <p class="tekstPopisa">Pasmine koje ispunjavaju Vaše kriterije:</p>
-          <p class="tekstPopisa">
-            1.<br />
-            2.<br />
-            3.<br />
-            4.<br />
-            5.<br />
-            6.
-          </p>
+          <q-card-section>
+            <div v-if="rezultatiPasmina.length">
+              <ul>
+                <li v-for="(pas, index) in rezultatiPasmina" :key="index">
+                  {{ index + 1 }}. {{ pas.nazivHR }} (engl.: {{ pas.nazivEN }})
+                </li>
+              </ul>
+            </div>
+            <div v-else>
+              <p>Nažalost, nema pasmina koje odgovaraju Vašim kriterijima.</p>
+            </div>
+          </q-card-section>
           <q-btn
             label="Pogledajte više - privremeno ovdje - ide svakom izboru svoj"
             color="teal-6"
@@ -156,6 +160,8 @@
 
 <script setup>
 import { computed } from 'vue'
+import { onMounted } from 'vue'
+import { ref } from 'vue'
 
 // Lista slika
 const slikePozadine = [
@@ -188,6 +194,15 @@ const backgroundStyle = computed(() => {
     backgroundImage: `url(/backgrounds/${slika})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
+  }
+})
+
+const rezultatiPasmina = ref([])
+
+onMounted(() => {
+  const spremljeni = localStorage.getItem('rezultatiPasmina')
+  if (spremljeni) {
+    rezultatiPasmina.value = JSON.parse(spremljeni)
   }
 })
 </script>

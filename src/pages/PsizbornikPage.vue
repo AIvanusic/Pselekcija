@@ -1,6 +1,7 @@
 <template>
   <div :style="backgroundStyle" class="fullscreen bg-image"></div>
   <div class="overlay"></div>
+  <p>test</p>
   <div class="row">
     <div class="col-12 col-md-8">
       <div class="title-container" style="max-width: 800px; margin: auto">
@@ -91,7 +92,7 @@
                     border-radius: 20px;
                   "
                 />
-                <q-btn
+                <!--<q-btn
                   label="Potvrdite odabir"
                   color="teal-6"
                   text-color="yellow-1"
@@ -103,7 +104,7 @@
                     border-radius: 20px;
                     text-transform: none;
                   "
-                />
+                />-->
               </q-card-actions>
             </q-card-section>
           </q-card-section>
@@ -129,7 +130,7 @@
                   text-color="yellow-1"
                   class="q-ml-md"
                 />
-                <q-btn
+                <!--<q-btn
                   label="Potvrdite odabir"
                   color="teal-6"
                   text-color="yellow-1"
@@ -141,7 +142,7 @@
                     border-radius: 20px;
                     text-transform: none;
                   "
-                />
+                />-->
               </q-card-section>
             </q-card>
           </q-card-section>
@@ -167,7 +168,7 @@
                   text-color="yellow-1"
                   class="q-ml-md"
                 />
-                <q-btn
+                <!--<q-btn
                   label="Potvrdite odabir"
                   color="teal-6"
                   text-color="yellow-1"
@@ -179,7 +180,7 @@
                     border-radius: 20px;
                     text-transform: none;
                   "
-                />
+                />-->
               </q-card-section>
             </q-card>
           </q-card-section>
@@ -210,7 +211,7 @@
                   text-color="yellow-1"
                   class="q-ml-md"
                 />
-                <q-btn
+                <!--<q-btn
                   label="Potvrdite odabir"
                   color="teal-6"
                   text-color="yellow-1"
@@ -222,7 +223,7 @@
                     border-radius: 20px;
                     text-transform: none;
                   "
-                />
+                />-->
               </q-card-section>
             </q-card>
           </q-card-section>
@@ -251,7 +252,7 @@
                 text-color="yellow-1"
                 class="q-ml-md"
               />
-              <q-btn
+              <!--<q-btn
                 label="Potvrdite odabir"
                 color="teal-6"
                 text-color="yellow-1"
@@ -263,7 +264,7 @@
                   border-radius: 20px;
                   text-transform: none;
                 "
-              />
+              />-->
             </q-card-section>
           </q-card>
         </q-card-section>
@@ -274,7 +275,7 @@
       <q-card class="q-pa-md pregled-card">
         <q-card-section>
           <p class="text-h5">Provjerite ovdje svoj izbor</p>
-          <p>
+          <p class="tekstPregleda">
             Hvala što koristite ovu uslugu.<br />
             Na temelju Vaših odgovora, preporučujemo psa
             <strong>{{ opisVelicine }}</strong
@@ -304,7 +305,7 @@
               color: #fffde7;
               text-transform: none;
             "
-            @click="$router.push('/psodabrani')"
+            @click="posaljiIzbore"
           />
         </q-card-section>
       </q-card>
@@ -416,17 +417,30 @@
   border-radius: 12px;
   border: 2px solid rgba(255, 255, 255, 0.4);
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
-  color: #fffde7;
+  color: #17564c;
   text-align: center;
   font-size: 1.2rem;
   font-weight: normal;
   z-index: 10;
 }
+
+.tekstPregleda {
+  font-size: 1.1rem;
+  font-weight: normal;
+  margin: 1rem 0 1rem 0;
+  font-family: 'Georgia', sans-serif;
+  color: #17564c;
+}
 </style>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
+import { onMounted } from 'vue'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
+
+const router = useRouter()
 
 // Lista slika
 const slikePozadine = [
@@ -466,14 +480,14 @@ const minTezina = ref('')
 const maxTezina = ref('')
 
 const opisVelicine = computed(() => {
-  const dijelovi = []
+  const elementiVelicine = []
 
-  if (minVisina.value) dijelovi.push(`viši od ${minVisina.value} cm`)
-  if (minTezina.value) dijelovi.push(`teži od ${minTezina.value} kg`)
-  if (maxVisina.value) dijelovi.push(`niži od ${maxVisina.value} cm`)
-  if (maxTezina.value) dijelovi.push(`lakši od ${maxTezina.value} kg`)
+  if (minVisina.value) elementiVelicine.push(`viši od ${minVisina.value} cm`)
+  if (minTezina.value) elementiVelicine.push(`teži od ${minTezina.value} kg`)
+  if (maxVisina.value) elementiVelicine.push(`niži od ${maxVisina.value} cm`)
+  if (maxTezina.value) elementiVelicine.push(`lakši od ${maxTezina.value} kg`)
 
-  return dijelovi.length ? `koji je ${dijelovi.join(', ')}` : '...'
+  return elementiVelicine.length ? `koji je ${elementiVelicine.join(', ')}` : '...'
 })
 
 // Linjanje
@@ -552,4 +566,33 @@ const treniranjeTekst = computed(() =>
     .map((opcija) => opcija.label)
     .join(', '),
 )
+
+// metoda koja jednim gumbom šalje sve parametre serveru na filtriranje:
+async function posaljiIzbore() {
+  console.log('Funkcija posaljiIzbore je pozvana')
+
+  const podatci = {
+    minVisina: minVisina.value,
+    maxVisina: maxVisina.value,
+    minTezina: minTezina.value,
+    maxTezina: maxTezina.value,
+    linjanje: odabranoLinjanje.value,
+    njega: odabranaNjega.value,
+    energija: odabranaEnergija.value,
+    trening: odabraniTrening.value,
+  }
+
+  try {
+    const response = await axios.post('http://localhost:3000/pregledajPsePoParametrima', podatci)
+
+    console.log('Dobiveni podaci:', response.data)
+    console.log('Šaljem podatke serveru:', podatci)
+
+    localStorage.setItem('rezultatiPasmina', JSON.stringify(response.data))
+    router.push('/psodabrani')
+  } catch (error) {
+    console.error('Greška pri dohvaćanju pasmina:', error)
+    alert('Došlo je do greške pri dohvaćanju podataka.')
+  }
+}
 </script>
