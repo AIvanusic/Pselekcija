@@ -1,7 +1,7 @@
 <template>
   <div :style="backgroundStyle" class="fullscreen bg-image"></div>
   <div class="overlay"></div>
-  <p>test</p>
+
   <div class="row">
     <div class="col-12 col-md-8">
       <div class="title-container" style="max-width: 800px; margin: auto">
@@ -323,8 +323,6 @@
     class="home-btn"
     @click="$router.push('/')"
   />
-  <!--</div>
-    </q-page>-->
 </template>
 
 <style>
@@ -456,6 +454,11 @@ const slikePozadine = [
   'image10.jpg',
   'image11.jpeg',
   'image12.jpg',
+  'image13.jpg',
+  'image14.jpg',
+  'image15.jpg',
+  'image16.jpg',
+  'image17.jpg',
 ]
 
 // ref koji obuhvaća stil pozadine

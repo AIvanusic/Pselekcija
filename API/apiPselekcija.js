@@ -1,5 +1,6 @@
+require('dotenv').config()
 const express = require('express')
-//const axios = require('axios');
+const axios = require('axios')
 const fs = require('fs')
 const csv = require('csv-parser')
 const cors = require('cors')
@@ -136,6 +137,283 @@ app.post('/pregledajPsePoParametrima', async (req, res) => {
   } catch (error) {
     console.error('Greška:', error)
     res.status(500).json({ error: 'Greška prilikom obrade CSV datoteke.' })
+  }
+})
+
+//pretraga veterinara sa stranice PsinformacijePage:
+app.get('/veterinari', async (req, res) => {
+  const grad = req.query.grad
+
+  if (!grad) {
+    return res.status(400).json({ error: 'Grad je obavezan parametar.' })
+  }
+
+  try {
+    const apiKey = process.env.AZURE_MAPS_KEY_Primary
+
+    const geoResponse = await axios.get(`https://atlas.microsoft.com/search/address/json`, {
+      params: {
+        'api-version': '1.0',
+        'subscription-key': apiKey,
+        query: grad,
+        limit: 1,
+      },
+    })
+    const position = geoResponse.data.results[0]?.position
+    if (!position) {
+      return res.status(404).json({ error: 'Grad nije pronađen.' })
+    }
+
+    const { lat, lon } = position
+
+    const searchQuery = `veterinar`
+    const responseVeterinar = await axios.get(`https://atlas.microsoft.com/search/poi/json`, {
+      params: {
+        'api-version': '1.0',
+        'subscription-key': apiKey,
+        query: searchQuery,
+        lat,
+        lon,
+        radius: 30000,
+        limit: 30,
+      },
+    })
+
+    const rezultati = responseVeterinar.data.results.map((item) => ({
+      naziv: item.poi?.name || item.address.freeformAddress,
+      adresa: item.address.freeformAddress,
+      pozicija: item.position,
+      udaljenost: item.dist,
+    }))
+
+    res.json(rezultati)
+    console.log('🔑 AZURE_MAPS_KEY:', apiKey)
+  } catch (error) {
+    console.error('❌ Došlo je do greške:', error.message)
+    if (error.response) {
+      console.error('🔁 Odgovor servera:', error.response.data)
+      console.error('🔁 Status:', error.response.status)
+    } else if (error.request) {
+      console.error('📡 Nema odgovora:', error.request)
+    } else {
+      console.error('⚙️ Postavka greške:', error.config)
+    }
+    res.status(500).json({ error: 'Neuspješan dohvat podataka' })
+  }
+})
+
+//pretraga trgovina sa stranice PsinformacijePage:
+app.get('/petShops', async (req, res) => {
+  const grad = req.query.grad
+
+  if (!grad) {
+    return res.status(400).json({ error: 'Grad je obavezan parametar.' })
+  }
+
+  try {
+    const apiKey = process.env.AZURE_MAPS_KEY_Primary
+
+    const geoResponse = await axios.get(`https://atlas.microsoft.com/search/address/json`, {
+      params: {
+        'api-version': '1.0',
+        'subscription-key': apiKey,
+        query: grad,
+        limit: 1,
+      },
+    })
+
+    const position = geoResponse.data.results[0]?.position
+    if (!position) {
+      return res.status(404).json({ error: 'Grad nije pronađen.' })
+    }
+
+    const { lat, lon } = position
+
+    const responsePetShop = await axios.get(`https://atlas.microsoft.com/search/poi/json`, {
+      params: {
+        'api-version': '1.0',
+        'subscription-key': apiKey,
+        query: 'pet shop',
+        lat,
+        lon,
+        radius: 30000, // npr. 30 km
+        limit: 30,
+      },
+    })
+
+    const rezultati = responsePetShop.data.results.map((item) => ({
+      naziv: item.poi?.name || item.address.freeformAddress,
+      adresa: item.address.freeformAddress,
+      pozicija: item.position,
+      udaljenost: item.dist,
+    }))
+
+    res.json(rezultati)
+  } catch (error) {
+    console.error('❌ Došlo je do greške:', error.message)
+    res.status(500).json({ error: 'Neuspješan dohvat podataka' })
+  }
+})
+
+//pretraga plaža za pse za PsinformacijePage:
+app.get('/dogBeach', async (req, res) => {
+  const grad = req.query.grad
+
+  if (!grad) {
+    return res.status(400).json({ error: 'Grad je obavezan parametar.' })
+  }
+
+  try {
+    const apiKey = process.env.AZURE_MAPS_KEY_Primary
+
+    const geoResponse = await axios.get(`https://atlas.microsoft.com/search/address/json`, {
+      params: {
+        'api-version': '1.0',
+        'subscription-key': apiKey,
+        query: grad,
+        limit: 1,
+      },
+    })
+
+    const position = geoResponse.data.results[0]?.position
+    if (!position) {
+      return res.status(404).json({ error: 'Grad nije pronađen.' })
+    }
+
+    const { lat, lon } = position
+
+    const response = await axios.get(`https://atlas.microsoft.com/search/poi/json`, {
+      params: {
+        'api-version': '1.0',
+        'subscription-key': apiKey,
+        query: 'dog beach',
+        lat,
+        lon,
+        radius: 30000, // 30 km
+        limit: 30,
+        // categorySet: '9352006', kaže chatGPT!!! - probati ako ne radi", // optional filter (beaches)
+      },
+    })
+
+    const rezultati = response.data.results.map((item) => ({
+      naziv: item.poi?.name || 'Nepoznato ime',
+      adresa: item.address?.freeformAddress || 'Adresa nije dostupna',
+      pozicija: item.position,
+      udaljenost: item.dist || null, // možeš prikazati udaljenost ako želiš
+    }))
+
+    res.json(rezultati)
+  } catch (error) {
+    console.error('❌ Došlo je do greške:', error.message)
+    res.status(500).json({ error: 'Neuspješan dohvat podataka' })
+  }
+})
+
+//pretraga parkova za pse PsinformacijePage:
+app.get('/dogPark', async (req, res) => {
+  const grad = req.query.grad
+
+  if (!grad) {
+    return res.status(400).json({ error: 'Grad je obavezan parametar.' })
+  }
+
+  try {
+    const apiKey = process.env.AZURE_MAPS_KEY_Primary
+
+    const geoResponse = await axios.get(`https://atlas.microsoft.com/search/address/json`, {
+      params: {
+        'api-version': '1.0',
+        'subscription-key': apiKey,
+        query: grad,
+        limit: 1,
+      },
+    })
+
+    const position = geoResponse.data.results[0]?.position
+    if (!position) {
+      return res.status(404).json({ error: 'Grad nije pronađen.' })
+    }
+
+    const { lat, lon } = position
+
+    const response = await axios.get(`https://atlas.microsoft.com/search/poi/json`, {
+      params: {
+        'api-version': '1.0',
+        'subscription-key': apiKey,
+        query: 'dog park',
+        lat,
+        lon,
+        radius: 30000,
+        limit: 30,
+      },
+    })
+
+    const rezultati = response.data.results.map((item) => ({
+      naziv: item.poi?.name || item.address.freeformAddress,
+      adresa: item.address.freeformAddress,
+      pozicija: item.position,
+      udaljenost: item.dist || null,
+    }))
+
+    res.json(rezultati)
+    console.log('🔑 AZURE_MAPS_KEY:', apiKey)
+  } catch (error) {
+    console.error(' Došlo je do greške:', error.message)
+    res.status(500).json({ error: 'Neuspješan dohvat podataka' })
+  }
+})
+
+//pretraga salona za pse PsinformacijePage:
+app.get('/dogSalon', async (req, res) => {
+  const grad = req.query.grad
+
+  if (!grad) {
+    return res.status(400).json({ error: 'Grad je obavezan parametar.' })
+  }
+
+  try {
+    const apiKey = process.env.AZURE_MAPS_KEY_Primary
+
+    const geoResponse = await axios.get(`https://atlas.microsoft.com/search/address/json`, {
+      params: {
+        'api-version': '1.0',
+        'subscription-key': apiKey,
+        query: grad,
+        limit: 1,
+      },
+    })
+
+    const position = geoResponse.data.results[0]?.position
+    if (!position) {
+      return res.status(404).json({ error: 'Grad nije pronađen.' })
+    }
+
+    const { lat, lon } = position
+
+    const searchQuery = 'dog salon'
+    const salonResponse = await axios.get(`https://atlas.microsoft.com/search/poi/json`, {
+      params: {
+        'api-version': '1.0',
+        'subscription-key': apiKey,
+        query: searchQuery,
+        lat,
+        lon,
+        radius: 30000, // 50 km domet
+        limit: 30,
+      },
+    })
+
+    const rezultati = salonResponse.data.results.map((item) => ({
+      naziv: item.poi?.name || item.address.freeformAddress,
+      adresa: item.address.freeformAddress,
+      pozicija: item.position,
+      udaljenost: item.dist,
+    }))
+
+    res.json(rezultati)
+  } catch (error) {
+    console.error('❌ Greška:', error.message)
+    res.status(500).json({ error: 'Neuspješan dohvat podataka' })
   }
 })
 

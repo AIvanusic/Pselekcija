@@ -16,7 +16,7 @@
         <q-card-section class="text-left">
           <p class="tekstPopisa">Pasmine koje ispunjavaju Vaše kriterije:</p>
           <q-card-section>
-            <div v-if="rezultatiPasmina.length">
+            <div class="tekstPopisa" v-if="rezultatiPasmina.length">
               <ul>
                 <li v-for="(pas, index) in rezultatiPasmina" :key="index">
                   {{ index + 1 }}. {{ pas.nazivHR }} (engl.: {{ pas.nazivEN }})
@@ -177,6 +177,11 @@ const slikePozadine = [
   'image10.jpg',
   'image11.jpeg',
   'image12.jpg',
+  'image13.jpg',
+  'image14.jpg',
+  'image15.jpg',
+  'image16.jpg',
+  'image17.jpg',
 ]
 
 // Dohvaćam index iz localStorage za kružno pokretanje jedne po jedne slike za background ili stavi na 0

@@ -111,6 +111,11 @@ const slikePozadine = [
   'image10.jpg',
   'image11.jpeg',
   'image12.jpg',
+  'image13.jpg',
+  'image14.jpg',
+  'image15.jpg',
+  'image16.jpg',
+  'image17.jpg',
 ]
 
 // ref koji obuhvaća stil pozadine
