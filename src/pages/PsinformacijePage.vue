@@ -250,7 +250,7 @@
 
           <q-btn
             icon="search"
-            label="Pretraži"
+            label="Pretraži salone za uređenje"
             unelevated
             text-color="yellow-2"
             size="lg"

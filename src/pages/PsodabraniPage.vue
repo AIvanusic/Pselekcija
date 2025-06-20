@@ -18,8 +18,34 @@
           <q-card-section>
             <div class="tekstPopisa" v-if="rezultatiPasmina.length">
               <ul>
-                <li v-for="(pas, index) in rezultatiPasmina" :key="index">
-                  {{ index + 1 }}. {{ pas.nazivHR }} (engl.: {{ pas.nazivEN }})
+                <li v-for="(pas, index) in rezultatiPasmina" :key="index" class="q-my-sm">
+                  <div
+                    @click="promjeneKliknutihPasmina(pas)"
+                    style="cursor: pointer; font-weight: bold"
+                  >
+                    {{ index + 1 }}. {{ pas.nazivHR }} (engl.: {{ pas.nazivEN }})
+                  </div>
+
+                  <q-slide-transition>
+                    <div
+                      v-if="kliknutaPasmina === pas"
+                      class="q-pa-md bg-white text-teal-10"
+                      style="border-radius: 8px; margin-top: 4px"
+                    >
+                      <!-- ispisivanje više informacija o pasmini -->
+                      <p><strong>Opis:</strong> {{ pas.opis }}</p>
+                      <p><strong>Skupina:</strong> {{ pas.skupina }}</p>
+                      <p><strong>Visina:</strong> {{ pas.minVisina }}–{{ pas.maxVisina }} cm</p>
+                      <p><strong>Težina:</strong> {{ pas.minTezina }}–{{ pas.maxTezina }} kg</p>
+                      <p><strong>Linjanje:</strong> {{ pas.linjanje }}</p>
+                      <p><strong>Njega:</strong> {{ pas.njega }}</p>
+                      <p><strong>Energija:</strong> {{ pas.energija }}</p>
+                      <p><strong>Trening:</strong> {{ pas.trening }}</p>
+                      <p><strong>Vladanje:</strong> {{ pas.vladanje }}</p>
+
+                      <!-- treba obraditi slike i doseg uzgajivačnica -->
+                    </div>
+                  </q-slide-transition>
                 </li>
               </ul>
             </div>
@@ -27,7 +53,7 @@
               <p>Nažalost, nema pasmina koje odgovaraju Vašim kriterijima.</p>
             </div>
           </q-card-section>
-          <q-btn
+          <!--<q-btn
             label="Pogledajte više - privremeno ovdje - ide svakom izboru svoj"
             color="teal-6"
             text-color="yellow-1"
@@ -42,7 +68,7 @@
               color: #fffde7;
               text-transform: none;
             "
-          />
+          />-->
           <!--svaka pasmina će dobiti svoj q-btn za pregled više informacija-->
         </q-card-section>
       </q-card>
@@ -202,7 +228,9 @@ const backgroundStyle = computed(() => {
   }
 })
 
+//radim s prikazom pasmina odabranih po parametrima
 const rezultatiPasmina = ref([])
+const kliknutaPasmina = ref(null)
 
 onMounted(() => {
   const spremljeni = localStorage.getItem('rezultatiPasmina')
@@ -210,4 +238,9 @@ onMounted(() => {
     rezultatiPasmina.value = JSON.parse(spremljeni)
   }
 })
+
+//uređujem mogućnosti prelaska između prikaza kliknutih pasmina
+function promjeneKliknutihPasmina(pas) {
+  kliknutaPasmina.value = kliknutaPasmina.value === pas ? null : pas
+}
 </script>

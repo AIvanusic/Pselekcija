@@ -126,6 +126,13 @@ app.post('/pregledajPsePoParametrima', async (req, res) => {
           maxVisina: data.MaxVisCM,
           minTezina: data.MinKG,
           maxTezina: data.MaxKG,
+          opis: data.Opis,
+          skupina: data.Skupina,
+          linjanje: data.Linjanje,
+          njega: data.NjegaDlake,
+          energija: data.RazEnergije,
+          trening: data.Trening,
+          vladanje: data.Vladanje,
         })
       }
     })
