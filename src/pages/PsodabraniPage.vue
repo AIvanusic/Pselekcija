@@ -42,8 +42,27 @@
                       <p><strong>Energija:</strong> {{ pas.energija }}</p>
                       <p><strong>Trening:</strong> {{ pas.trening }}</p>
                       <p><strong>Vladanje:</strong> {{ pas.vladanje }}</p>
+                      <q-btn
+                        label="Pronađi uzgajivačnice"
+                        color="teal"
+                        class="q-mt-md"
+                        @click="pronadiUzgajivacnice(pas)"
+                      />
 
-                      <!-- treba obraditi slike i doseg uzgajivačnica -->
+                      <div v-if="uzgajivacnicePasmina[pas.nazivEN]" class="q-mt-md">
+                        <div v-if="uzgajivacnicePasmina[pas.nazivEN].length">
+                          <p><strong>Uzgajivačnice:</strong></p>
+                          <ul>
+                            <li v-for="(uzg, idx) in uzgajivacnicePasmina[pas.nazivEN]" :key="idx">
+                              {{ uzg.naziv }} — {{ uzg.adresa }}
+                            </li>
+                          </ul>
+                        </div>
+                        <div v-else>
+                          <p><em>Nema pronađenih uzgajivačnica u Europi za ovu pasminu.</em></p>
+                        </div>
+                      </div>
+                      <!-- treba obraditi slike koje će se prikazivati odmah s podacima -->
                     </div>
                   </q-slide-transition>
                 </li>
@@ -242,5 +261,21 @@ onMounted(() => {
 //uređujem mogućnosti prelaska između prikaza kliknutih pasmina
 function promjeneKliknutihPasmina(pas) {
   kliknutaPasmina.value = kliknutaPasmina.value === pas ? null : pas
+}
+
+// prikaz uzgajivačnica u q-slideu odabrane pasmine
+const uzgajivacnicePasmina = ref({})
+
+async function pronadiUzgajivacnice(pas) {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/psodabraniUzgajivacnice?pasmina=${encodeURIComponent(pas.nazivEN)}`,
+    )
+    const data = await response.json()
+    uzgajivacnicePasmina.value[pas.nazivEN] = data
+  } catch (error) {
+    console.error('Greška pri dohvaćanju uzgajivačnica:', error)
+    uzgajivacnicePasmina.value[pas.nazivEN] = [] // da barem prikaže "nema rezultata"
+  }
 }
 </script>

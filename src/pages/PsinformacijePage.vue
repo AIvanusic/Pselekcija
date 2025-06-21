@@ -483,7 +483,7 @@ async function pretraziPetShops() {
     petShops.value = response.data
     console.log('Dobiveni rezultati:', response.data)
   } catch (error) {
-    console.error('❌ Greška:', error.response?.data || error.message)
+    console.error('Greška:', error.response?.data || error.message)
     alert(error.response?.data?.error || 'Neuspješan dohvat podataka.')
   }
 }
@@ -505,7 +505,7 @@ async function pretraziPlaze() {
     dogBeach.value = response.data
     console.log('Dobiveni rezultati:', response.data)
   } catch (error) {
-    console.error('❌ Greška:', error.response?.data || error.message)
+    console.error('Greška:', error.response?.data || error.message)
     alert(error.response?.data?.error || 'Neuspješan dohvat podataka.')
   }
 }
@@ -527,7 +527,7 @@ async function pretraziParkove() {
     dogPark.value = response.data
     console.log('Dobiveni rezultati:', response.data)
   } catch (error) {
-    console.error('❌ Greška:', error.response?.data || error.message)
+    console.error('Greška:', error.response?.data || error.message)
     alert(error.response?.data?.error || 'Neuspješan dohvat podataka.')
   }
 }
@@ -549,7 +549,7 @@ async function pretraziSalone() {
     dogSalon.value = response.data
     console.log('Dobiveni rezultati:', response.data)
   } catch (error) {
-    console.error('❌ Greška:', error.response?.data || error.message)
+    console.error('Greška:', error.response?.data || error.message)
     alert(error.response?.data?.error || 'Neuspješan dohvat podataka.')
   }
 }

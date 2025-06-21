@@ -95,7 +95,7 @@ app.post('/pregledajPsePoParametrima', async (req, res) => {
       if (vrijednostiLinjanje.length) {
         const linjanjeCSV = (data.Linjanje || '').replace(/\s+/g, ' ').trim()
         if (!vrijednostiLinjanje.includes(linjanjeCSV)) {
-          console.log(`⛔ Linjanje ne odgovara: "${data.Vrsta}" ima "${linjanjeCSV}"`)
+          console.log(`Linjanje ne odgovara: "${data.Vrsta}" ima "${linjanjeCSV}"`)
           postojiUnos = false
         }
       }
@@ -147,6 +147,53 @@ app.post('/pregledajPsePoParametrima', async (req, res) => {
   }
 })
 
+// Pretraga uzgajivačnica za prikazane pasmine na PsodabraniPage:
+app.get('/psodabraniUzgajivacnice', async (req, res) => {
+  const pasmina = req.query.pasmina
+  if (!pasmina) {
+    return res.status(400).json({ error: 'Pasmina nije definirana.' })
+  }
+
+  try {
+    const apiKey = process.env.AZURE_MAPS_KEY_Primary // Zagreb kao početna točka
+    const lat = 45.815
+    const lon = 15.981
+
+    const search = await axios.get(`https://atlas.microsoft.com/search/poi/json`, {
+      params: {
+        'api-version': '1.0',
+        'subscription-key': apiKey,
+        query: `${pasmina} kennel`,
+        lat,
+        lon,
+        radius: 3000000, // do 3000 km
+        limit: 50,
+      },
+    })
+
+    const sviRezultati = search.data.results
+
+    // Prvo HR, zatim ostalo
+    const hrvatske = sviRezultati.filter((r) => r.address?.countryCodeISO3 === 'HRV')
+    const ostale = sviRezultati.filter((r) => r.address?.countryCodeISO3 !== 'HRV')
+
+    const rezultati = [...hrvatske, ...ostale].map((item) => {
+      const naziv = item.poi?.name || 'Nepoznat naziv'
+      const adresa = item.address?.freeformAddress || 'Nepoznata adresa'
+      const drzava = item.address?.country || ''
+      return {
+        naziv,
+        adresa: drzava ? `${adresa}, ${drzava}` : adresa,
+      }
+    })
+
+    res.json(rezultati)
+  } catch (e) {
+    console.error('Greška pri dohvaćanju uzgajivačnica:', e.message)
+    res.status(500).json({ error: 'Neuspješan dohvat uzgajivačnica.' })
+  }
+})
+
 //pretraga veterinara sa stranice PsinformacijePage:
 app.get('/veterinari', async (req, res) => {
   const grad = req.query.grad
@@ -194,16 +241,11 @@ app.get('/veterinari', async (req, res) => {
     }))
 
     res.json(rezultati)
-    console.log('🔑 AZURE_MAPS_KEY:', apiKey)
+    console.log('AZURE_MAPS_KEY:', apiKey)
   } catch (error) {
-    console.error('❌ Došlo je do greške:', error.message)
+    console.error('Došlo je do greške:', error.message)
     if (error.response) {
-      console.error('🔁 Odgovor servera:', error.response.data)
-      console.error('🔁 Status:', error.response.status)
-    } else if (error.request) {
-      console.error('📡 Nema odgovora:', error.request)
-    } else {
-      console.error('⚙️ Postavka greške:', error.config)
+      console.error('Status:', error.response.status)
     }
     res.status(500).json({ error: 'Neuspješan dohvat podataka' })
   }
@@ -311,7 +353,7 @@ app.get('/dogBeach', async (req, res) => {
 
     res.json(rezultati)
   } catch (error) {
-    console.error('❌ Došlo je do greške:', error.message)
+    console.error('Došlo je do greške:', error.message)
     res.status(500).json({ error: 'Neuspješan dohvat podataka' })
   }
 })
@@ -363,7 +405,7 @@ app.get('/dogPark', async (req, res) => {
     }))
 
     res.json(rezultati)
-    console.log('🔑 AZURE_MAPS_KEY:', apiKey)
+    console.log('AZURE_MAPS_KEY:', apiKey)
   } catch (error) {
     console.error(' Došlo je do greške:', error.message)
     res.status(500).json({ error: 'Neuspješan dohvat podataka' })
@@ -419,7 +461,7 @@ app.get('/dogSalon', async (req, res) => {
 
     res.json(rezultati)
   } catch (error) {
-    console.error('❌ Greška:', error.message)
+    console.error('Greška:', error.message)
     res.status(500).json({ error: 'Neuspješan dohvat podataka' })
   }
 })
