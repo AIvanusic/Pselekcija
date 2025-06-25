@@ -41,19 +41,48 @@
               border: 1px solid rgba(255, 255, 255, 0.4);
             "
           />
-          <q-list v-if="veterinarskeStanice.length">
-            <q-item v-for="(vet, index) in veterinarskeStanice" :key="index">
-              <q-item-section>
-                <q-item-label
-                  ><strong>{{ vet.naziv }}</strong></q-item-label
+          <!--
+            <q-list v-if="veterinarskeStanice.length" class="q-mt-md q-pa-md bg-white text-teal-10" style="border-radius: 8px;">
+              <q-item v-for="(vet, index) in veterinarskeStanice" :key="index">
+                <q-item-section>
+                  <q-item-label
+                    ><strong>{{ vet.naziv }}</strong></q-item-label
+                  >
+                  <q-item-label caption>
+                    {{ vet.adresa }}<br />
+                    <span v-if="vet.udaljenost"
+                      >Udaljenost: {{ Math.round(vet.udaljenost) }} m</span
+                    >
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          -->
+          <q-slide-transition>
+            <div
+              v-if="pretragaVetPokrenuta && veterinarskeStanice.length"
+              class="q-mt-md q-pa-md bg-teal-5 text-yellow-1"
+              style="border-radius: 8px"
+            >
+              <ul>
+                <li
+                  v-for="(vet, index) in veterinarskeStanice"
+                  :key="index"
+                  style="margin-bottom: 0.5rem"
                 >
-                <q-item-label caption>
-                  {{ vet.adresa }}<br />
+                  <strong>{{ vet.naziv }}</strong> — {{ vet.adresa }}<br />
                   <span v-if="vet.udaljenost">Udaljenost: {{ Math.round(vet.udaljenost) }} m</span>
-                </q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
+                </li>
+              </ul>
+            </div>
+            <div
+              v-else-if="pretragaVetPokrenuta"
+              class="q-mt-md q-pa-md bg-teal-5 text-yellow-1"
+              style="border-radius: 8px"
+            >
+              <p>Nema traženog sadržaja u krugu od 30 km.</p>
+            </div>
+          </q-slide-transition>
         </div>
       </q-card-section>
 
@@ -96,7 +125,7 @@
               border: 1px solid rgba(255, 255, 255, 0.4);
             "
           />
-          <q-list v-if="petShops.length">
+          <!--<q-list v-if="petShops.length">
             <q-item v-for="(shop, index) in petShops" :key="index">
               <q-item-section>
                 <q-item-label
@@ -110,7 +139,31 @@
                 </q-item-label>
               </q-item-section>
             </q-item>
-          </q-list>
+          </q-list>-->
+
+          <q-slide-transition>
+            <div
+              v-if="pretragaShopPokrenuta && petShops.length"
+              class="q-mt-md q-pa-md bg-teal-5 text-yellow-1"
+              style="border-radius: 8px"
+            >
+              <ul>
+                <li v-for="(shop, index) in petShops" :key="index" style="margin-bottom: 0.5rem">
+                  <strong>{{ shop.naziv }}</strong> — {{ shop.adresa }}<br />
+                  <span v-if="shop.udaljenost"
+                    >Udaljenost: {{ Math.round(shop.udaljenost) }} m</span
+                  >
+                </li>
+              </ul>
+            </div>
+            <div
+              v-else-if="pretragaShopPokrenuta"
+              class="q-mt-md q-pa-md bg-teal-5 text-yellow-1"
+              style="border-radius: 8px"
+            >
+              <p>Nema traženog sadržaja u krugu od 30 km.</p>
+            </div>
+          </q-slide-transition>
         </div>
       </q-card-section>
 
@@ -152,7 +205,7 @@
               border: 1px solid rgba(255, 255, 255, 0.4);
             "
           />
-          <q-list v-if="dogBeach.length">
+          <!--<q-list v-if="dogBeach.length">
             <q-item v-for="(beach, index) in dogBeach" :key="index">
               <q-item-section>
                 <q-item-label
@@ -167,7 +220,30 @@
                 </q-item-label>
               </q-item-section>
             </q-item>
-          </q-list>
+          </q-list>-->
+          <q-slide-transition>
+            <div
+              v-if="pretragaBeachPokrenuta && dogBeach.length"
+              class="q-mt-md q-pa-md bg-teal-5 text-yellow-1"
+              style="border-radius: 8px"
+            >
+              <ul>
+                <li v-for="(beach, index) in dogBeach" :key="index" style="margin-bottom: 0.5rem">
+                  <strong>{{ beach.naziv }}</strong> — {{ beach.adresa }}<br />
+                  <span v-if="beach.udaljenost"
+                    >Udaljenost: {{ Math.round(beach.udaljenost) }} m</span
+                  >
+                </li>
+              </ul>
+            </div>
+            <div
+              v-else-if="pretragaBeachPokrenuta"
+              class="q-mt-md q-pa-md bg-teal-5 text-yellow-1"
+              style="border-radius: 8px"
+            >
+              <p>Nema traženog sadržaja u krugu od 30 km.</p>
+            </div>
+          </q-slide-transition>
         </div>
       </q-card-section>
 
@@ -209,7 +285,7 @@
               border: 1px solid rgba(255, 255, 255, 0.4);
             "
           />
-          <q-list v-if="dogPark.length">
+          <!--<q-list v-if="dogPark.length">
             <q-item v-for="(shop, index) in dogPark" :key="index">
               <q-item-section>
                 <q-item-label
@@ -220,7 +296,30 @@
                 </q-item-label>
               </q-item-section>
             </q-item>
-          </q-list>
+          </q-list>-->
+          <q-slide-transition>
+            <div
+              v-if="pretragaParkPokrenuta && dogPark.length"
+              class="q-mt-md q-pa-md bg-teal-5 text-yellow-1"
+              style="border-radius: 8px"
+            >
+              <ul>
+                <li v-for="(park, index) in dogPark" :key="index" style="margin-bottom: 0.5rem">
+                  <strong>{{ park.naziv }}</strong> — {{ park.adresa }}<br />
+                  <span v-if="park.udaljenost"
+                    >Udaljenost: {{ Math.round(park.udaljenost) }} m</span
+                  >
+                </li>
+              </ul>
+            </div>
+            <div
+              v-else-if="pretragaParkPokrenuta"
+              class="q-mt-md q-pa-md bg-teal-5 text-yellow-1"
+              style="border-radius: 8px"
+            >
+              <p>Nema traženog sadržaja u krugu od 30 km.</p>
+            </div>
+          </q-slide-transition>
         </div>
       </q-card-section>
 
@@ -262,7 +361,7 @@
               border: 1px solid rgba(255, 255, 255, 0.4);
             "
           />
-          <q-list v-if="dogSalon.length">
+          <!--<q-list v-if="dogSalon.length">
             <q-item v-for="(salon, index) in dogSalon" :key="index">
               <q-item-section>
                 <q-item-label
@@ -276,7 +375,30 @@
                 </q-item-label>
               </q-item-section>
             </q-item>
-          </q-list>
+          </q-list>-->
+          <q-slide-transition>
+            <div
+              v-if="pretragaSalonPokrenuta && dogSalon.length"
+              class="q-mt-md q-pa-md bg-teal-5 text-yellow-1"
+              style="border-radius: 8px"
+            >
+              <ul>
+                <li v-for="(salon, index) in dogSalon" :key="index" style="margin-bottom: 0.5rem">
+                  <strong>{{ salon.naziv }}</strong> — {{ salon.adresa }}<br />
+                  <span v-if="salon.udaljenost"
+                    >Udaljenost: {{ Math.round(salon.udaljenost) }} m</span
+                  >
+                </li>
+              </ul>
+            </div>
+            <div
+              v-else-if="pretragaSalonPokrenuta"
+              class="q-mt-md q-pa-md bg-teal-5 text-yellow-1"
+              style="border-radius: 8px"
+            >
+              <p>Nema traženog sadržaja u krugu od 30 km.</p>
+            </div>
+          </q-slide-transition>
         </div>
       </q-card-section>
 
@@ -444,6 +566,11 @@ onMounted(() => {
 })
 
 const grad = ref('')
+
+// reguliranje koji se okvir s ispisom prikazuje u slučaju potrage
+const pretragaVetPokrenuta = ref(false)
+
+// pretraga veterinarskih stanica
 const veterinarskeStanice = ref([])
 
 async function pretraziVeterinare() {
@@ -451,6 +578,8 @@ async function pretraziVeterinare() {
     alert('Molimo unesite grad.')
     return
   }
+
+  pretragaVetPokrenuta.value = true
 
   try {
     const response = await axios.get('http://localhost:3000/veterinari', {
@@ -467,6 +596,10 @@ async function pretraziVeterinare() {
   }
 }
 
+// reguliranje koji se okvir s ispisom prikazuje u slučaju potrage
+const pretragaShopPokrenuta = ref(false)
+
+// pretraga trgovina za kućne ljubime
 const petShops = ref([])
 
 async function pretraziPetShops() {
@@ -474,6 +607,8 @@ async function pretraziPetShops() {
     alert('Molimo unesite grad.')
     return
   }
+
+  pretragaShopPokrenuta.value = true
 
   try {
     const response = await axios.get('http://localhost:3000/petShops', {
@@ -488,7 +623,10 @@ async function pretraziPetShops() {
   }
 }
 
-//Plaže za pse
+// reguliranje koji se okvir s ispisom prikazuje u slučaju potrage
+const pretragaBeachPokrenuta = ref(false)
+
+// pretraga Plaža za pse
 const dogBeach = ref([])
 
 async function pretraziPlaze() {
@@ -496,6 +634,8 @@ async function pretraziPlaze() {
     alert('Molimo unesite grad.')
     return
   }
+
+  pretragaBeachPokrenuta.value = true
 
   try {
     const response = await axios.get('http://localhost:3000/dogBeach', {
@@ -510,7 +650,10 @@ async function pretraziPlaze() {
   }
 }
 
-//Parkovi za pse
+// reguliranje koji se okvir s ispisom prikazuje u slučaju potrage
+const pretragaParkPokrenuta = ref(false)
+
+// pretraga parkova za pse
 const dogPark = ref([])
 
 async function pretraziParkove() {
@@ -518,6 +661,8 @@ async function pretraziParkove() {
     alert('Molimo unesite grad.')
     return
   }
+
+  pretragaParkPokrenuta.value = true
 
   try {
     const response = await axios.get('http://localhost:3000/dogPark', {
@@ -532,7 +677,10 @@ async function pretraziParkove() {
   }
 }
 
-//Saloni za pse
+// reguliranje koji se okvir s ispisom prikazuje u slučaju potrage
+const pretragaSalonPokrenuta = ref(false)
+
+// pretraga salona za njegu ljubimaca
 const dogSalon = ref([])
 
 async function pretraziSalone() {
@@ -540,6 +688,8 @@ async function pretraziSalone() {
     alert('Molimo unesite grad.')
     return
   }
+
+  pretragaSalonPokrenuta.value = true
 
   try {
     const response = await axios.get('http://localhost:3000/dogSalon', {

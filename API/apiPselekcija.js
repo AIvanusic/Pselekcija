@@ -75,6 +75,7 @@ app.post('/pregledajPsePoParametrima', async (req, res) => {
     response.on('data', (data) => {
       if (!data.Vrsta || !data.MinVisCM) return
       console.log('Redak iz CSV-a:', data)
+      console.log('Ključevi retka:', Object.keys(data))
 
       const visinaMin = parseFloat((data.MinVisCM || '').trim())
       const visinaMax = parseFloat((data.MaxVisCM || '').trim())
@@ -95,22 +96,27 @@ app.post('/pregledajPsePoParametrima', async (req, res) => {
       if (vrijednostiLinjanje.length) {
         const linjanjeCSV = (data.Linjanje || '').replace(/\s+/g, ' ').trim()
         if (!vrijednostiLinjanje.includes(linjanjeCSV)) {
-          console.log(`Linjanje ne odgovara: "${data.Vrsta}" ima "${linjanjeCSV}"`)
           postojiUnos = false
         }
       }
-      if (vrijednostiNjega.length)
-        postojiUnos &&= vrijednostiNjega.includes(
-          (data.NjegaDlake || '').replace(/\s+/g, ' ').trim(),
-        )
-      if (
-        vrijednostiEnergija.length &&
-        !vrijednostiEnergija.includes((data.RazEnergije || '').replace(/\s+/g, ' ').trim())
-      )
-        if (vrijednostiTrening.length)
-          postojiUnos &&= vrijednostiTrening.includes(
-            (data.Trening || '').replace(/\s+/g, ' ').trim(),
-          )
+      if (vrijednostiNjega.length) {
+        const vrijednostiNjegaCSV = (data.NjegaDlake || '').replace(/\s+/g, ' ').trim()
+        if (!vrijednostiNjega.includes(vrijednostiNjegaCSV)) {
+          postojiUnos = false
+        }
+      }
+      if (vrijednostiEnergija.length) {
+        const vrijednostiEnergijaCSV = (data.RazEnergije || '').replace(/\s+/g, ' ').trim()
+        if (!vrijednostiEnergija.includes(vrijednostiEnergijaCSV)) {
+          postojiUnos = false
+        }
+      }
+      if (vrijednostiTrening.length) {
+        const vrijednostiTreningCSV = (data.Trening || '').replace(/\s+/g, ' ').trim()
+        if (!vrijednostiTrening.includes(vrijednostiTreningCSV)) {
+          postojiUnos = false
+        }
+      }
 
       if (!postojiUnos) {
         console.log(`Preskačem: ${data.Vrsta} - ne zadovoljava uvjete.`)
@@ -120,6 +126,7 @@ app.post('/pregledajPsePoParametrima', async (req, res) => {
 
       if (postojiUnos) {
         rezultati.push({
+          id: parseInt((data['id'] || data['\ufeffid'] || '').trim()),
           nazivHR: data.Vrsta,
           nazivEN: data.Breed,
           minVisina: data.MinVisCM,
@@ -133,12 +140,16 @@ app.post('/pregledajPsePoParametrima', async (req, res) => {
           energija: data.RazEnergije,
           trening: data.Trening,
           vladanje: data.Vladanje,
+          MinAge: data.MinAge,
+          MaxAge: data.MaxAge,
+          Temperament: data.Temperament,
         })
       }
     })
 
     response.on('end', () => {
       console.log('CSV parsiranje gotovo, pronađeno pasmina:', rezultati.length)
+      console.log('Primjeri rezultata sa ID-om:', rezultati.slice(0, 3))
       res.json(rezultati)
     })
   } catch (error) {

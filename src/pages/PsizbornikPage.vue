@@ -502,7 +502,6 @@ const opcijeLinjanja = [
   { label: 'Sezonski', value: 'Seasonal' },
   { label: 'Povremeno', value: 'Occasional' },
   { label: 'Rijetko', value: 'Infrequent' },
-  { label: 'Nema podataka', value: '0' },
 ]
 
 const LinjanjeTekst = computed(() =>
@@ -516,7 +515,6 @@ const LinjanjeTekst = computed(() =>
 const odabranaNjega = ref([])
 
 const opcijeNjege = [
-  { label: 'Nema podataka', value: 'Njega_0' },
   { label: 'Zaštita od sunca', value: 'Njega_1' },
   { label: 'Povremeno kupanje i četkanje', value: 'Njega_2' },
   { label: 'Tjedno četkanje', value: 'Njega_3' },
@@ -540,7 +538,6 @@ const opcijeEnergije = [
   { label: 'Energetičan', value: 'Energija_3' },
   { label: 'Miran', value: 'Energija_2' },
   { label: 'Couch potato', value: 'Energija_1' },
-  { label: 'Nema podataka', value: 'Energija_0' },
 ]
 
 const energijaTekst = computed(() =>
@@ -557,10 +554,8 @@ const opcijeTreninga = [
   { label: 'Može biti tvrdoglav', value: 'Trening_6' },
   { label: 'Nezavisan', value: 'Trening_5' },
   { label: 'Ugodan/Agreeable', value: 'Trening_4' },
-  { label: 'Jednostavan za treniranje', value: 'Trening_3' },
   { label: 'Željan udovoljiti', value: 'Trening_2' },
   { label: 'Lak za treniranje', value: 'Trening_1' },
-  { label: 'Nema podataka', value: 'Trening_0' },
 ]
 
 const treniranjeTekst = computed(() =>

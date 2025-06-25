@@ -8,9 +8,6 @@
         Kad srce želi najbolje za psa, <br />
         srce treba partnera u odabiru.
       </p>
-      <q-card-section>
-        <p class="tekstSectiona">Popis pasmina koje zadovoljavaju unesene kriterije:</p>
-      </q-card-section>
 
       <q-card class="q-pa-md odabrani-card">
         <q-card-section class="text-left">
@@ -32,7 +29,28 @@
                       class="q-pa-md bg-white text-teal-10"
                       style="border-radius: 8px; margin-top: 4px"
                     >
-                      <!-- ispisivanje više informacija o pasmini -->
+                      <!-- Slike -->
+                      <div class="q-gutter-sm row wrap justify-center">
+                        <!--<q-img
+                          v-for="n in 3"
+                          :key="n"
+                          :src="`/Slike_Pasmine_Optimizirane/${pas.id}/${pas.id}_${n}.jpg`"
+                          style="
+                            width: 350px;
+                            object-fit: contain;
+                            background-color: #eee;
+                          "
+                          :alt="`Slika pasmine ${pas.nazivHR}`"
+                        />-->
+                        <img
+                          v-for="n in 3"
+                          :key="n"
+                          :src="`/Slike_Pasmine_Optimizirane/${pas.id}/${pas.id}_${n}.jpg`"
+                          :alt="`Slika pasmine ${pas.nazivHR}`"
+                          style="width: 330px; object-fit: contain"
+                        />
+                      </div>
+                      <!-- više informacija o pasmini -->
                       <p><strong>Opis:</strong> {{ pas.opis }}</p>
                       <p><strong>Skupina:</strong> {{ pas.skupina }}</p>
                       <p><strong>Visina:</strong> {{ pas.minVisina }}–{{ pas.maxVisina }} cm</p>
@@ -42,6 +60,8 @@
                       <p><strong>Energija:</strong> {{ pas.energija }}</p>
                       <p><strong>Trening:</strong> {{ pas.trening }}</p>
                       <p><strong>Vladanje:</strong> {{ pas.vladanje }}</p>
+                      <p><strong>Temperament:</strong> {{ pas.Temperament }}</p>
+                      <p><strong>Životni vijek:</strong> {{ pas.MinAge }}–{{ pas.MaxAge }} god</p>
                       <q-btn
                         label="Pronađi uzgajivačnice"
                         color="teal"
@@ -174,7 +194,7 @@
 
 .odabrani-card {
   position: relative;
-  width: 800px;
+  width: 1400px;
   background-color: rgba(255, 255, 255, 0.5);
   border-radius: 12px;
   border: 2px solid rgba(255, 255, 255, 0.4);
@@ -207,6 +227,7 @@
 import { computed } from 'vue'
 import { onMounted } from 'vue'
 import { ref } from 'vue'
+import { watch } from 'vue'
 
 // Lista slika
 const slikePozadine = [
@@ -278,4 +299,8 @@ async function pronadiUzgajivacnice(pas) {
     uzgajivacnicePasmina.value[pas.nazivEN] = [] // da barem prikaže "nema rezultata"
   }
 }
+
+watch(rezultatiPasmina, (novi) => {
+  console.log('Rezultati u frontendu:', novi.slice(0, 3))
+})
 </script>
