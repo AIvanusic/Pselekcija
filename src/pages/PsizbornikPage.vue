@@ -27,7 +27,7 @@
                 <q-input
                   v-model="minVisina"
                   label="Minimalna visina (cm)"
-                  type="number"
+                  type="text"
                   filled
                   input-class="text-yellow-2 text-center"
                   label-color="yellow-2"
@@ -43,7 +43,7 @@
                   outlined
                   v-model="minTezina"
                   label="Minimalna težina (kg)"
-                  type="number"
+                  type="text"
                   filled
                   input-class="text-yellow-2 text-center"
                   label-color="yellow-2"
@@ -68,7 +68,7 @@
                   outlined
                   v-model="maxVisina"
                   label="Maksimalna visina (cm)"
-                  type="number"
+                  type="text"
                   filled
                   input-class="text-yellow-2 text-center"
                   label-color="yellow-2"
@@ -82,7 +82,7 @@
                 <q-input
                   v-model="maxTezina"
                   label="   Maksimalna težina (kg)"
-                  type="number"
+                  type="text"
                   filled
                   input-class="text-yellow-1 text-center"
                   label-color="yellow-2"
@@ -227,32 +227,31 @@
               </q-card-section>
             </q-card>
           </q-card-section>
-        </q-card>
 
-        <!-- Treniranje -->
-        <q-card-section>
-          <q-card
-            class="text-yellow-1 q-pa-md"
-            style="background-color: rgba(0, 128, 128, 0.3); margin: auto; max-width: 800px"
-          >
-            <q-card-section>
-              <p class="tekstSectiona">
-                Vjerujemo da će Vaš pas u vama naći odličnog partnera za ležanje na plaži i gledanje
-                zvježđa, kao i za duge šetnje, puno igre... <br />
-                No, vjerujemo da svojega psa želite i odgojiti, a možda i naučiti nešto više od
-                osnova lijepog ponašanja. <br />
-                Stoga, molimo Vas, odaberite s kakvim psom želite raditi i učiti:
-              </p>
+          <!-- Treniranje -->
+          <q-card-section>
+            <q-card
+              class="text-yellow-1 q-pa-md"
+              style="background-color: rgba(0, 128, 128, 0.3); margin: auto; max-width: 800px"
+            >
+              <q-card-section>
+                <p class="tekstSectiona">
+                  Vjerujemo da će Vaš pas u vama naći odličnog partnera za ležanje na plaži i
+                  gledanje zvježđa, kao i za duge šetnje, puno igre... <br />
+                  No, vjerujemo da svojega psa želite i odgojiti, a možda i naučiti nešto više od
+                  osnova lijepog ponašanja. <br />
+                  Stoga, molimo Vas, odaberite s kakvim psom želite raditi i učiti:
+                </p>
 
-              <q-option-group
-                v-model="odabraniTrening"
-                :options="opcijeTreninga"
-                type="checkbox"
-                color="yellow-2"
-                text-color="yellow-1"
-                class="q-ml-md"
-              />
-              <!--<q-btn
+                <q-option-group
+                  v-model="odabraniTrening"
+                  :options="opcijeTreninga"
+                  type="checkbox"
+                  color="yellow-2"
+                  text-color="yellow-1"
+                  class="q-ml-md"
+                />
+                <!--<q-btn
                 label="Potvrdite odabir"
                 color="teal-6"
                 text-color="yellow-1"
@@ -265,9 +264,10 @@
                   text-transform: none;
                 "
               />-->
-            </q-card-section>
-          </q-card>
-        </q-card-section>
+              </q-card-section>
+            </q-card>
+          </q-card-section>
+        </q-card>
       </div>
     </div>
 
@@ -310,6 +310,40 @@
         </q-card-section>
       </q-card>
     </div>
+
+    <!--<div class="q-pa-md q-gutter-sm">-->
+    <!--<q-btn label="Neispravan unos" color="primary" @click="alert = true" />-->
+
+    <q-dialog v-model="dialogIsNaNUnos">
+      <q-card>
+        <q-card-section>
+          <div class="text-h5">
+            Unesene vrijednosti moraju biti cijeli ili decimalni brojevi, odvojeni točkom. Molimo
+            ispravite unos.
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            label="Novi unos"
+            color="teal-6"
+            text-color="yellow-1"
+            unelevated
+            class="q-mt-md"
+            style="
+              width: 250px;
+              background-color: rgba(0, 128, 128);
+              border-radius: 20px;
+              border: 2px solid rgba(255, 255, 255, 0.4);
+              color: #fffde7;
+            "
+            v-close-popup
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <!--</div>-->
   </div>
 
   <!-- HOME BUTTON -->
@@ -566,6 +600,10 @@ const treniranjeTekst = computed(() =>
 )
 
 // metoda koja jednim gumbom šalje sve parametre serveru na filtriranje:
+
+// dialog (imenovan isNanUnos) umjesto alert
+const dialogIsNaNUnos = ref(false)
+
 async function posaljiIzbore() {
   console.log('Funkcija posaljiIzbore je pozvana')
 
@@ -580,6 +618,26 @@ async function posaljiIzbore() {
     trening: odabraniTrening.value,
   }
 
+  const unesenisNan = (unos) => unos !== '' && (isNaN(Number(unos)) || !/^\d*\.?\d*$/.test(unos))
+
+  if (
+    unesenisNan(minVisina.value) ||
+    unesenisNan(maxVisina.value) ||
+    unesenisNan(minTezina.value) ||
+    unesenisNan(maxTezina.value)
+  ) {
+    //alert(
+    //'Unesene vrijednosti moraju biti cijeli ili decimalni brojevi, odvojeni točkom. Molimo ispravite unos.',
+
+    dialogIsNaNUnos.value = true
+
+    minVisina.value = ''
+    maxVisina.value = ''
+    minTezina.value = ''
+    maxTezina.value = ''
+    return
+  }
+
   try {
     const response = await axios.post('http://localhost:3000/pregledajPsePoParametrima', podatci)
 
@@ -590,7 +648,6 @@ async function posaljiIzbore() {
     router.push('/psodabrani')
   } catch (error) {
     console.error('Greška pri dohvaćanju pasmina:', error)
-    alert('Došlo je do greške pri dohvaćanju podataka.')
   }
 }
 </script>

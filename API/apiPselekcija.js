@@ -8,7 +8,13 @@ const cors = require('cors')
 const app = express()
 const port = process.env.PORT || 3000
 
-app.use(cors())
+app.use(
+  cors({
+    origin: 'http://localhost:9000',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+  }),
+)
 app.use(express.json())
 
 app.post('/pregledajPsePoParametrima', async (req, res) => {
@@ -184,7 +190,7 @@ app.get('/psodabraniUzgajivacnice', async (req, res) => {
 
     const sviRezultati = search.data.results
 
-    // Prvo HR, zatim ostalo
+    // Prvo Hrvatske uzgajivačnice, zatim ostale
     const hrvatske = sviRezultati.filter((r) => r.address?.countryCodeISO3 === 'HRV')
     const ostale = sviRezultati.filter((r) => r.address?.countryCodeISO3 !== 'HRV')
 
