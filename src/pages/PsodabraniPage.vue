@@ -47,6 +47,10 @@
                           :key="n"
                           :src="`/Slike_Pasmine_Optimizirane/${pas.id}/${pas.id}_${n}.jpg`"
                           :alt="`Slika pasmine ${pas.nazivHR}`"
+                          @error="
+                            (event) =>
+                              (event.target.src = '/Slike_Pasmine_Optimizirane/NedostajeSlika.jpg')
+                          "
                           style="width: 330px; object-fit: contain"
                         />
                       </div>
